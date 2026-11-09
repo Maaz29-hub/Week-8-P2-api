@@ -167,4 +167,6 @@ I sent /analyze a note of 2,001 characters. The API returned HTTP 422 with the m
 5\. An async endpoint runs on a single event loop. Heavy model inference inside it blocks the loop, so other requests (even /health) have to wait. run\_in\_threadpool moves the heavy work to another thread.
 
 6\. A 4-person team has 4 x 3 / 2 = 6 communication channels.
+## What I learned
 
+My model is only useful as a product if it rejects bad input safely and is tested. My API now returns clean 415, 413, 400 and 422 errors with no stack trace, and 8 tests prove it. The biggest surprise was the async trap: heavy model code inside an async endpoint can block other requests, so I run it in a thread pool.
